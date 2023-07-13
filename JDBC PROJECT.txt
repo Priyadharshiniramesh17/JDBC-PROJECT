@@ -1,0 +1,107 @@
+import java.sql.*;
+import java.util.Scanner;
+
+public class Query {
+    public static void selectQuery(String name)throws ClassNotFoundException, SQLException{
+        String url="jdbc:mysql://localhost:3306/bank";
+        String username="root";
+        String password="mysql123";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con= DriverManager.getConnection(url,username,password);
+        PreparedStatement ps=con.prepareStatement("select c_balance from customer where c_name=?;");
+        ps.setString(1,name);
+        ResultSet rs=ps.executeQuery();
+
+        while(rs.next()){
+            System.out.println(rs.getInt("c_balance"));
+        }
+
+
+
+    }
+    public static void insertQuery(String c_name,int c_accNo,int c_pin,int c_balance,String c_pan,String c_contact,String c_address,String b_id )throws ClassNotFoundException, SQLException {
+        String url = "jdbc:mysql://localhost:3306/bank";
+        String username = "root";
+        String password = "mysql123";
+        Class.forName("com.mysql.cj.jdbc.Driver");//driver classloading
+        Connection con = DriverManager.getConnection(url, username, password);//connection object creation
+        PreparedStatement ps = con.prepareStatement("insert into cust_details values(?,?,?,?,?,?,?,?)");
+        ps.setString(1, c_name);
+        ps.setInt(2,c_accNo);
+        ps.setInt(3,c_pin);
+        ps.setInt(4,c_balance);
+        ps.setString(5,c_pan);
+        ps.setString(6,c_contact);
+        ps.setString(7,c_address);
+        ps.setString(8,b_id );
+
+        int row = ps.executeUpdate();
+        if (row > 0) {
+            System.out.println("values inserted successfully");
+        } else {
+            System.out.println("values not inserted");
+        }
+    }
+        public static void updatecust_details(String name,int pin,String pan)throws ClassNotFoundException, SQLException {
+            String url = "jdbc:mysql://localhost:3306/bank";
+            String username = "root";
+            String password = "mysql123";
+            Class.forName("com.mysql.cj.jdbc.Driver");//driver classloading
+            Connection con = DriverManager.getConnection(url, username, password);//connection object creation
+            PreparedStatement ps = con.prepareStatement("update cust_details set c_pin=?,c_pan=? where c_name=?;");
+            ps.setInt(1, pin);
+            ps.setString(2, pan);
+            ps.setString(3, name);
+
+            int row = ps.executeUpdate();
+            if (row > 0) {
+                System.out.println("values updated successfully");
+            } else {
+                System.out.println("values not updated");
+            }
+        }
+//
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        Scanner sc=new Scanner(System.in);
+        System.out.println("Enter the name");
+        String name=sc.next();
+        System.out.println("c_balance");
+
+        selectQuery(name);
+
+//          Insert
+
+
+        System.out.println("enter the c_name");
+        String  c_name=sc.next();
+        System.out.println("enter the c_accNo");
+        int c_accNo=sc.nextInt();
+        System.out.println("enter the c_pin");
+        int c_pin=sc.nextInt();
+        System.out.println("enter the c_balance");
+        int c_balance=sc.nextInt();
+        System.out.println("enter the c_pan");
+        String c_pan=sc.next();
+        System.out.println("enter the c_contact");
+        String c_contact=sc.next();
+        System.out.println("enter the c_address");
+        String c_address=sc.next();
+        System.out.println("enter the b_id");
+        String b_id=sc.next();
+
+        insertQuery(c_name,c_accNo,c_pin,c_balance,c_pan,c_contact,c_address,b_id);
+
+//        update
+        System.out.println("enter the name");
+        String name=sc.next();
+        System.out.println("enter the pin");
+        int pin=sc.nextInt();
+        System.out.println("enter the pan");
+        String pan=sc.next();
+
+        updatecust_details(name,pin,pan);
+
+    }
+
+}
+
